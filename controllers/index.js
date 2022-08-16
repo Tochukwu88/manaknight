@@ -1,4 +1,5 @@
 const AdminUserController = require("./admin/Admin_user_controller");
+const AdminTerminateConfigController = require("./admin/Admin_terminate_config_controller");
 const Admin_order_controller = require("./admin/Admin_order_controller");
 const AdminQuizController = require("./admin/Admin_quiz_controller");
 const AdminQuestionController = require("./admin/Admin_question_controller");
@@ -19,6 +20,7 @@ module.exports = [
   Admin_order_controller,
   ShopifyWebhook,
   AdminResultProfileController,
+  AdminTerminateConfigController,
   AdminGetProfileSystem,
   AdminUserController,
   AdminQuizController,

@@ -1941,8 +1941,51 @@ $(document).on("input", "#myRange", async function (event, isCustom) {
 
 $(document).on("click", ".selectionBtn", function (evt, isCustom) {
   clearTimeout(timeout);
-  function checkAllergie() {}
+  function terminateQuiz() {
+    $(".popupOverlay, .popupContent").addClass("active");
+    var time = ;
+    let message = ;
+    //cll configuration
+    new Promise(function (resolve, reject) {
+      $.ajax({
+        url: url_preset + "/admin/api/terminate",
+        type: "GET",
+        success: function (response) {
+          console.log(response.data.counter, response.data.message);
+          time = response.data.counter;
+          message = response.data.message;
+
+          return resolve();
+        },
+        error: function (error) {
+          return reject(error);
+        },
+      });
+    });
+    console.log(time, message);
+    $(" .popupOverlay .popupContent h2").append(`${message}`);
+
+    $(" .popupOverlay .popupContent p").append(`${time}`);
+    // Update the count down every 1 second
+
+    var x = setInterval(function () {
+      time = time - 1;
+      $(" .popupOverlay .popupContent p").html(`${time}`);
+      if (time < 0) {
+        clearInterval(x);
+        window.location.href = "/";
+      }
+    }, 1000);
+  }
+  function checkAllergie(val) {
+    var index = tempSelectionAns.indexOf(val);
+    if (index != -1) {
+      terminateQuiz();
+    }
+  }
+
   var val = $(this).attr("data-val");
+  checkAllergie(val);
   if ($(this).hasClass("active")) {
     tempSelectionAns.splice(tempSelectionAns.indexOf(val), 1);
     $(this).removeClass("active");
@@ -1952,7 +1995,7 @@ $(document).on("click", ".selectionBtn", function (evt, isCustom) {
     if (!$(this).hasClass("active")) $(this).addClass("active");
     if (!$(this).hasClass("highlight")) $(this).addClass("highlight");
   }
-  console.log(tempSelectionAns);
+
   if (!isCustom) {
     timeout = setTimeout(function () {
       nextQuestion();
