@@ -1392,7 +1392,7 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     $("#typeSelection .answerInner").html("");
     $("#typeSelection").css("display", "block");
     currentActiveAnswerType = "typeSelection";
-
+    //
     ques.answers.forEach((val, index) => {
       if (val.answer) {
         $("#typeSelection .answerInner").append(`
@@ -1941,6 +1941,7 @@ $(document).on("input", "#myRange", async function (event, isCustom) {
 
 $(document).on("click", ".selectionBtn", function (evt, isCustom) {
   clearTimeout(timeout);
+  function checkAllergie() {}
   var val = $(this).attr("data-val");
   if ($(this).hasClass("active")) {
     tempSelectionAns.splice(tempSelectionAns.indexOf(val), 1);
@@ -1951,6 +1952,7 @@ $(document).on("click", ".selectionBtn", function (evt, isCustom) {
     if (!$(this).hasClass("active")) $(this).addClass("active");
     if (!$(this).hasClass("highlight")) $(this).addClass("highlight");
   }
+  console.log(tempSelectionAns);
   if (!isCustom) {
     timeout = setTimeout(function () {
       nextQuestion();
