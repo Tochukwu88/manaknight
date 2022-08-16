@@ -1943,8 +1943,8 @@ $(document).on("click", ".selectionBtn", function (evt, isCustom) {
   clearTimeout(timeout);
   function terminateQuiz() {
     $(".popupOverlay, .popupContent").addClass("active");
-    var time = ;
-    let message = ;
+    var time;
+    let message;
     //cll configuration
     new Promise(function (resolve, reject) {
       $.ajax({
