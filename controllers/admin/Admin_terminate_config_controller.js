@@ -15,21 +15,25 @@ app.get(
   "/admin/terminate",
   SessionService.verifySessionMiddleware(role, "admin"),
   async function (req, res, next) {
-    if (req.session.csrf === undefined) {
-      req.session.csrf = SessionService.randomString(100);
+    try {
+      if (req.session.csrf === undefined) {
+        req.session.csrf = SessionService.randomString(100);
+      }
+
+      const terminateAdminAddViewModel = require("../../view_models/terminate_configuration_edit_view_model.js");
+
+      const viewModel = new terminateAdminAddViewModel(
+        db.terminateconfig,
+        "Add config",
+        "",
+        "",
+        "/admin/terminate"
+      );
+
+      res.render("admin/Add_terminate_config", viewModel);
+    } catch (error) {
+      console.log(error);
     }
-
-    const terminateAdminAddViewModel = require("../../view_models/terminate_configuration_edit_view_model.js");
-
-    const viewModel = new terminateAdminAddViewModel(
-      db.terminateconfig,
-      "Add config",
-      "",
-      "",
-      "/admin/terminate"
-    );
-
-    res.render("admin/Add_terminate_config", viewModel);
   }
 );
 app.post(
@@ -42,7 +46,7 @@ app.post(
     }
 
     let { counter, message } = req.body;
-    console.log(counter, message);
+
     try {
       const config = await db.terminateconfig.findOne({});
 
@@ -59,11 +63,11 @@ app.post(
           }
         );
       }
-      console.log(data);
-      if (!data) {
-      }
 
-      req.flash("success", "configuration added successfully ");
+      if (!data) {
+        //todo: handle error
+        console.log("an error occurred");
+      }
 
       return res.redirect("/admin/terminate");
     } catch (error) {

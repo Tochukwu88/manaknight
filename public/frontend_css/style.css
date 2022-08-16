@@ -1474,7 +1474,9 @@ img.image-missing {
 .popupContent{
   color: white;
   text-align: center;
+  margin-top: 200px;
   visibility: hidden;
+  
 }
 .popupOverlay.active, .popupContent.active{
   visibility: visible;

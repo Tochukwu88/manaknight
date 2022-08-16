@@ -1402,7 +1402,11 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
         `);
       }
     });
-
+    $("#typeSelection .answerInner").append(`
+    <div class="selectionOptions">
+      <button class="selectionBtns selectionBtn" onclick="handleNoneOfTheAbove()" >None of the above</button>
+    </div>
+  `);
     if (alreadyAnswered && alreadyAnswered.answer) {
       if (Array.isArray(alreadyAnswered.answer)) {
         alreadyAnswered.answer.forEach((answer) => {
@@ -1938,20 +1942,37 @@ $(document).on("input", "#myRange", async function (event, isCustom) {
     }, nextQuestionTimeoutCounter);
   }
 });
+function getterminateConfig() {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: url_preset + "/admin/api/terminate",
+      type: "GET",
+      success: function (response) {
+        console.log(response.data.counter, response.data.message);
+        time = response.data.counter;
+        message = response.data.message;
+
+        return resolve();
+      },
+      error: function (error) {
+        return reject(error);
+      },
+    });
+  });
+}
 
 $(document).on("click", ".selectionBtn", function (evt, isCustom) {
   clearTimeout(timeout);
-  function terminateQuiz() {
+  async function terminateQuiz() {
     $(".popupOverlay, .popupContent").addClass("active");
     var time;
-    let message;
+    let message = "";
     //cll configuration
-    new Promise(function (resolve, reject) {
+    await new Promise(function (resolve, reject) {
       $.ajax({
         url: url_preset + "/admin/api/terminate",
         type: "GET",
         success: function (response) {
-          console.log(response.data.counter, response.data.message);
           time = response.data.counter;
           message = response.data.message;
 
@@ -1962,7 +1983,7 @@ $(document).on("click", ".selectionBtn", function (evt, isCustom) {
         },
       });
     });
-    console.log(time, message);
+
     $(" .popupOverlay .popupContent h2").append(`${message}`);
 
     $(" .popupOverlay .popupContent p").append(`${time}`);
